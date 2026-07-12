@@ -1,0 +1,14 @@
+Renal Mass Characterization on Cross-Sectional Imaging
+
+The following table summarizes key CT and MRI features for differentiating common renal masses:
+
+| Feature | Angiomyolipoma (AML) | Renal Cell Carcinoma (RCC) | Simple Cyst (Bosniak I) | Oncocytoma |
+|---|---|---|---|---|
+| CT attenuation pre-contrast | Negative HU (macroscopic fat) | 20-70 HU (soft tissue) | 0-20 HU (water density) | 30-50 HU |
+| Enhancement pattern | Minimal (vascular smooth muscle) | Heterogeneous, avid | None | Homogeneous, avid with central scar |
+| MRI T1 signal | High (fat) | Isointense to hypointense | Homogeneous low signal | Isointense |
+| MRI T2 signal | High (fat) with chemical shift | Heterogeneous high | Homogeneous very high (CSF-like) | Isointense to slightly high |
+| Key differentiating feature | Macroscopic fat on CT or chemical shift MRI | Pseudocapsule, tumor thrombus, metastases | Thin imperceptible wall, no septa | Central stellate scar on delayed imaging |
+| Cortical vs medullary origin | Typically cortical/exophytic | Cortical | Cortical | Cortical |
+| Hemorrhage risk | High (>4 cm; Wunderlich syndrome) | Moderate | None | Low |
+| Growth pattern | Slow, indolent | Variable (can be aggressive) | None | Benign, may grow slowly |

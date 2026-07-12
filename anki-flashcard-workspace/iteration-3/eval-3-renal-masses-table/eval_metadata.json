@@ -1,0 +1,14 @@
+{
+  "eval_id": 3,
+  "eval_name": "renal-masses-table-differentiation",
+  "prompt": "Convert this radiology passage with a comparison table into Anki cloze and basic flashcards. Prioritize differentiating features between AML, RCC, simple cyst, and oncocytoma.",
+  "stress_test": "table_extraction",
+  "assertions": [
+    {"name": "word_count_under_40", "description": "Each card under 40 words"},
+    {"name": "valid_cloze_syntax", "description": "All cloze cards use valid {{cN::...}} markup"},
+    {"name": "no_trivial_cloze", "description": "No cloze hides generic/stop words"},
+    {"name": "covers_all_entities", "description": "Covers AML, RCC, simple cyst, and oncocytoma"},
+    {"name": "table_data_preserved", "description": "Key tabular facts (HU values, enhancement, signal) appear as cards"},
+    {"name": "standalone_subject", "description": "Every card names its subject"}
+  ]
+}

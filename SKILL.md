@@ -16,21 +16,23 @@ Dissect is the leading word. The agent dissects the textbook: slices it along na
 
 ### 1. Ready the specimen
 
-Check that the PDF path exists. Check that `pymupdf4llm` is importable. If a chapter name was given, confirm it appears in the PDF's table of contents.
+Check that the PDF path exists. Check that `pymupdf` is importable. If a chapter name was given, note that the script searches for it in the page text (some PDFs lack a table of contents).
 
-_Completion criterion_: PDF exists, dependency is importable, and the chapter is locatable (or omitted for full-book mode). Stop with a clear error if any check fails.
+_Completion criterion_: PDF exists and dependency is importable. Stop with a clear error if either check fails.
 
 ### 2. Slice
 
-Run `scripts/extract.py <pdf-path> [--chapter "<title>"]`. This produces one `.chunk` file per heading-aligned section and a `skipped.log` for non-text content.
+Run `scripts/extract.py <pdf-path> [--chapter "<title>"]`. This produces one `.chunk` file per page and cleans hyphenated line breaks common in PDF text extraction.
 
-Read `skipped.log`. If non-empty, tell the user which pages had figures, diagrams, or math blocks that were skipped.
+Read the chunks quickly. If a page contains mostly sidebar noise (a repeated outline, advertisement, blank page), skip it in step 3.
 
-_Completion criterion_: Chunk files and `skipped.log` exist. User knows about skipped content.
+_Completion criterion_: Chunk files exist.
 
 ### 3. Examine
 
 For each chunk file, load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
+
+Some chunks contain sidebar noise (a repeated chapter outline, page numbers, headers or footers). The LLM handles this naturally — it will extract real facts and ignore boilerplate. No need to strip it manually.
 
 Beware of **trivial clozes**: the prompt already warns against hiding generic words like "not" or "most", but the LLM sometimes does it anyway. If a response contains a cloze that would be guessable without domain knowledge (a grammatical word, a common adjective, a term repeated in the surrounding text), reject that card and ask the LLM to replace the cloze target with a discriminating term.
 
@@ -51,6 +53,5 @@ Report to the user:
 - Basic card count
 - Error count
 - Paths to all output files
-- Path to `skipped.log` (if non-empty)
 
 _Completion criterion_: User has everything they need to import into Anki.

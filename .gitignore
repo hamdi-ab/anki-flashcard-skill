@@ -1,0 +1,15 @@
+# Generated chunk files
+*-workspace/evals/inputs/chunk_*.json
+
+# Generated CSV output
+*-workspace/evals/inputs/cloze_cards.csv
+*-workspace/evals/inputs/basic_cards.csv
+*-workspace/evals/inputs/errors.csv
+*-workspace/evals/inputs/responses.jsonl
+
+# Downloaded test PDFs (copyright material)
+*-workspace/evals/inputs/esr_*.pdf
+
+# Python cache
+__pycache__/
+*.pyc

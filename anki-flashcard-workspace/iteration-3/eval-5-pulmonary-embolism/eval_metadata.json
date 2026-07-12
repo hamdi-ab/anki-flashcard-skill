@@ -1,0 +1,14 @@
+{
+  "eval_id": 5,
+  "eval_name": "pulmonary-embolism-headingless-prose",
+  "prompt": "Convert this continuous prose (no section headings) about pulmonary embolism imaging into Anki cloze and basic flashcards.",
+  "stress_test": "headingless_prose",
+  "assertions": [
+    {"name": "word_count_under_40", "description": "Each card under 40 words"},
+    {"name": "valid_cloze_syntax", "description": "All cloze cards use valid {{cN::...}} markup"},
+    {"name": "no_trivial_cloze", "description": "No cloze hides generic/stop words"},
+    {"name": "covers_key_concepts", "description": "Covers CTPA, HU threshold, acute vs chronic findings, right heart strain signs"},
+    {"name": "distribution_by_relevance", "description": "More cards on high-yield concepts, not evenly spread across all sentences"},
+    {"name": "standalone_subject", "description": "Every card names its subject"}
+  ]
+}

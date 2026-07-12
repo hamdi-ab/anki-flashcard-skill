@@ -1,0 +1,20 @@
+BI-RADS Assessment Categories for Mammography
+
+The Breast Imaging Reporting and Data System (BI-RADS) standardizes mammography reporting.
+
+Category 0: Incomplete — Need additional imaging evaluation. Used when the screening exam reveals an abnormality requiring further workup (spot compression, magnification views, ultrasound) before a final assessment can be made.
+
+Category 1: Negative — No findings to comment on. The breasts are symmetric with no masses, architectural distortion, or suspicious calcifications. Routine screening continues at standard interval.
+
+Category 2: Benign — A definitely benign finding is present, such as involuting calcifications, fat-containing masses (oil cysts, lipomas, hamartomas), or intramammary lymph nodes. No change in management. Routine screening.
+
+Category 3: Probably Benign — A finding with less than 2% risk of malignancy. Requires short-interval follow-up (typically 6 months). If stable over 2-3 years, downgrade to Category 2. Common examples: a non-palpable, round, equal-density mass; grouped punctate calcifications; focal asymmetry that stabilizes.
+
+Category 4: Suspicious — Biopsy should be considered. Subcategorized by risk:
+- 4A: Low suspicion (2-10% likelihood of malignancy)
+- 4B: Intermediate suspicion (10-50% likelihood)
+- 4C: Moderate concern (50-95% likelihood)
+
+Category 5: Highly Suggestive of Malignancy — At least 95% chance of malignancy. Biopsy is mandatory. Examples include spiculated masses, pleomorphic calcifications in a segmental distribution, or a malignant-appearing mass with associated skin thickening.
+
+Category 6: Known Biopsy-Proven Malignancy — Used for exams performed after biopsy confirmation but before definitive surgical treatment.

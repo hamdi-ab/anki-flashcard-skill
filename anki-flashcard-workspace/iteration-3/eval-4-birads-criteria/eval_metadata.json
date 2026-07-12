@@ -1,0 +1,14 @@
+{
+  "eval_id": 4,
+  "eval_name": "birads-numeric-categories",
+  "prompt": "Convert this BI-RADS description into Anki cloze and basic flashcards. Prioritize the numeric categories, risk thresholds, and management implications.",
+  "stress_test": "numbered_criteria",
+  "assertions": [
+    {"name": "word_count_under_40", "description": "Each card under 40 words"},
+    {"name": "valid_cloze_syntax", "description": "All cloze cards use valid {{cN::...}} markup"},
+    {"name": "no_trivial_cloze", "description": "No cloze hides generic/stop words"},
+    {"name": "covers_all_categories", "description": "Covers categories 0 through 6"},
+    {"name": "risk_thresholds_preserved", "description": "Risk percentages and management actions are captured"},
+    {"name": "standalone_subject", "description": "Every card names its subject"}
+  ]
+}
