@@ -11,7 +11,12 @@ HYPHEN_RE = re.compile(r"(\w+)-\n(\w+)")
 
 
 def _clean(text: str) -> str:
-    return HYPHEN_RE.sub(r"\1\2", text)
+    while True:
+        new = HYPHEN_RE.sub(r"\1\2", text)
+        if new == text:
+            break
+        text = new
+    return text
 
 
 def _detect_no_text(doc) -> bool:
