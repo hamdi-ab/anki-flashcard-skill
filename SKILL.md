@@ -18,7 +18,13 @@ Dissect is the leading word. The agent dissects the textbook: slices it along na
 
 Check that the PDF path exists. Check that `pymupdf` is importable. If a chapter name was given, note that the script searches for it in the page text (some PDFs lack a table of contents).
 
-_Completion criterion_: PDF exists and dependency is importable. Stop with a clear error if either check fails.
+**Edge cases the script handles automatically:**
+- **Corrupted PDF** — prints an error and exits; relay the error verbatim.
+- **Password-protected PDF** — prints an error asking the user to open and save without the password first; relay the instruction.
+- **Scanned / image-only PDF** — prints a warning that no text layer was found and suggests OCR; relay the suggestion. The script continues in case some pages have text, but expect few or no cards.
+- **Chapter not found** — prints an error listing available chapter-like headings found in the text (up to 10), so the user can pick the right one.
+
+_Completion criterion_: PDF exists and dependency is importable. Stop with a clear error if either check fails. Relay edge-case messages to the user.
 
 ### 2. Slice
 
