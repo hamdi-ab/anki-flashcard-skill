@@ -1,6 +1,12 @@
+---
+name: anki-flashcard
+description: Dissects a textbook PDF into Anki-ready flashcards. Use when the user invokes /anki or asks to turn a textbook into Anki cards.
+disable-model-invocation: true
+---
+
 # Anki Flashcard
 
-User-invoked. Dissects a textbook PDF into Anki-ready flashcards.
+User-invoked via `/anki`. Dissects a textbook PDF into Anki-ready flashcards.
 
 ## Dissect
 
@@ -16,7 +22,7 @@ _Completion criterion_: PDF exists, dependency is importable, and the chapter is
 
 ### 2. Slice
 
-Run `extract.py <pdf-path> [--chapter "<title>"]`. This produces one `.chunk` file per heading-aligned section and a `skipped.log` for non-text content.
+Run `scripts/extract.py <pdf-path> [--chapter "<title>"]`. This produces one `.chunk` file per heading-aligned section and a `skipped.log` for non-text content.
 
 Read `skipped.log`. If non-empty, tell the user which pages had figures, diagrams, or math blocks that were skipped.
 
@@ -24,13 +30,13 @@ _Completion criterion_: Chunk files and `skipped.log` exist. User knows about sk
 
 ### 3. Examine
 
-For each chunk file, load the prompt template from [`PROMPT_CLOZE.md`](./PROMPT_CLOZE.md) or [`PROMPT_BASIC.md`](./PROMPT_BASIC.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
+For each chunk file, load the prompt template from [`CLOZE-PROMPT.md`](./CLOZE-PROMPT.md) or [`BASIC-PROMPT.md`](./BASIC-PROMPT.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
 
 _Completion criterion_: Every chunk produced a response. No chunk was skipped.
 
 ### 4. Plate
 
-Run `postprocess.py <responses.jsonl> --output-dir <pdf-dir>`. This validates each row (word count, cloze syntax, duplicates), splits cloze from basic cards, and writes `cloze_cards.csv`, `basic_cards.csv`, `errors.csv`.
+Run `scripts/postprocess.py <responses.jsonl> --output-dir <pdf-dir>`. This validates each row (word count, cloze syntax, duplicates), splits cloze from basic cards, and writes `cloze_cards.csv`, `basic_cards.csv`, `errors.csv`.
 
 Check `errors.csv`. If non-empty, tell the user how many rows failed and why.
 
