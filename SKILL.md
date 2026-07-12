@@ -51,7 +51,8 @@ _Completion criterion_: Chunk files exist.
 
 **For each chunk file:**
 1. **Inventory topics.** Read the chunk text and list 3-8 key concepts/findings in it (e.g. for a radiology page about pancreatitis: necrosis, fluid collections, pseudocysts, abscess, calcifications, ductal dilation). This inventory is your coverage checklist.
-2. **Generate cards.** Load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md). Replace `{TEXT}` with the chunk text and `{TARGET}` with the resolved target (e.g. `12` or `10-20`). Send to the LLM.
+2. **Check for images.** If the chunk JSON has an `"images"` list (e.g. `"images": ["chunk_0000_p1_img0.png", "chunk_0000_p1_img1.jpg"]`), those files were extracted alongside the chunk. Join the filenames with commas for the `{IMAGES}` placeholder. If no images, use `"None"`.
+3. **Generate cards.** Load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md). Replace `{TEXT}` with the chunk text, `{IMAGES}` with the image list (or `"None"`), and `{TARGET}` with the resolved target (e.g. `12` or `10-20`). Send to the LLM.
 3. **Check coverage.** Compare the generated cards against your topic inventory. If an entire topic is missing, send a targeted follow-up to the LLM: `"You covered X and Y but missed Z. Generate cards for Z."`
 4. **Reject trivial clozes.** If a cloze hides a generic word (not, is, most, first, common) or a term obvious from surrounding context, reject that card and ask the LLM to replace the target with a discriminating term.
 
@@ -76,5 +77,6 @@ Report to the user:
 - Basic card count
 - Error count
 - Paths to all output files
+- If images were extracted, instruct the user to copy the image files (PNG/JPEG) into Anki's `collection.media/` folder on their device before importing the CSV, so the `<img>` tags render correctly in their cards.
 
 _Completion criterion_: User has everything they need to import into Anki.

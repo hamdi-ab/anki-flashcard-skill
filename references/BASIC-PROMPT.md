@@ -1,7 +1,12 @@
 Review Text:
 {TEXT}
 
+Available Images:
+{IMAGES}
+
 Task: Your task is to convert this text into Basic Note Type (front/back) Anki flashcards. Generate {TARGET} flashcards. Prioritize information regarding the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each flashcard is clearly written, and adheres to the specified formatting and reference criteria.
+
+When an available image (figure, diagram, radiology image) is directly relevant to a flashcard, include it on the Back side using Anki's HTML image syntax: `<img src="filename.png">`. Place the `<img>` tag after the answer text, on its own line. Only reference images that are listed in Available Images. Do not reference images that are not present.
 
 Formatting Criteria:
 - Construct a table with three columns: "Front", "Back", "Number".

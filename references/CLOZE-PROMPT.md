@@ -1,7 +1,12 @@
 Review Text:
 {TEXT}
 
+Available Images:
+{IMAGES}
+
 Task: Your task is to convert this text into direct statements using Anki cloze deletion mark-up. Generate {TARGET} statements. Prioritize the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each statement is clearly written, easily understandable, and adheres to the specified formatting and reference criteria.
+
+When an available image (figure, diagram, radiology image) is directly relevant to a statement, include it in the card using Anki's HTML image syntax: `<img src="filename.png">`. Place the `<img>` tag at the end of the statement, after the closing period. Only reference images that are listed in Available Images. Do not reference images that are not present.
 
 Formatting Criteria:
 - Construct a table with two columns: "Statements" and "Number".
