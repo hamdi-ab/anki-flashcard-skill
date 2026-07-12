@@ -30,7 +30,7 @@ _Completion criterion_: Chunk files and `skipped.log` exist. User knows about sk
 
 ### 3. Examine
 
-For each chunk file, load the prompt template from [`CLOZE-PROMPT.md`](./CLOZE-PROMPT.md) or [`BASIC-PROMPT.md`](./BASIC-PROMPT.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
+For each chunk file, load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
 
 Beware of **trivial clozes**: the prompt already warns against hiding generic words like "not" or "most", but the LLM sometimes does it anyway. If a response contains a cloze that would be guessable without domain knowledge (a grammatical word, a common adjective, a term repeated in the surrounding text), reject that card and ask the LLM to replace the cloze target with a discriminating term.
 

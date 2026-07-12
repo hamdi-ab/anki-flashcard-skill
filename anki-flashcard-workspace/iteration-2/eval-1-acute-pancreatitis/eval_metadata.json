@@ -1,0 +1,13 @@
+{
+  "eval_id": 1,
+  "eval_name": "acute-pancreatitis-cloze",
+  "prompt": "Convert this radiology passage into Anki cloze flashcards. Prioritize imaging features, unique findings, and differentiating similar entities.",
+  "assertions": [
+    {"name": "word_count_under_40", "description": "Each card under 40 words"},
+    {"name": "max_2_cloze_per_card", "description": "No more than 2 cloze deletions per card"},
+    {"name": "valid_cloze_syntax", "description": "All cards use valid {{cN::...}} markup"},
+    {"name": "no_trivial_cloze", "description": "No cloze hides single stop words (not, is, the, a, most, first)"},
+    {"name": "standalone_subject", "description": "Every card names its subject"},
+    {"name": "coverage_key_facts", "description": "Covers modality, necrosis, APFC, complications"}
+  ]
+}

@@ -1,0 +1,13 @@
+{
+  "eval_id": 2,
+  "eval_name": "liver-masses-differentiation",
+  "prompt": "Convert this radiology passage into both cloze and basic Anki flashcards. Prioritize differentiating features between hemangioma and metastasis.",
+  "assertions": [
+    {"name": "word_count_under_40", "description": "Each card under 40 words"},
+    {"name": "max_2_cloze_per_card", "description": "No more than 2 cloze deletions per card"},
+    {"name": "valid_cloze_syntax", "description": "All cards use valid {{cN::...}} markup"},
+    {"name": "no_trivial_cloze", "description": "No cloze hides single stop words or obvious-from-context terms"},
+    {"name": "standalone_subject", "description": "Every card names its subject"},
+    {"name": "differentiation_priority", "description": "Cards emphasize hemangioma vs metastasis differentiating features"}
+  ]
+}
