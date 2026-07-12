@@ -28,7 +28,9 @@ _Completion criterion_: PDF exists and dependency is importable. Stop with a cle
 
 ### 2. Slice
 
-Run `scripts/extract.py <pdf-path> [--chapter "<title>"] [--pages-per-chunk <N>]`. This groups consecutive pages into chunk files and cleans hyphenated line breaks common in PDF text extraction.
+Run `scripts/extract.py <pdf-path> [--chapter "<title>"] [--pages-per-chunk <N>] [--extract-images]`. This groups consecutive pages into chunk files and cleans hyphenated line breaks common in PDF text extraction.
+
+Use `--extract-images` to extract embedded images (figures, diagrams) from each page. Images are saved alongside the chunk files as PNG/JPEG and listed in the chunk JSON under an `"images"` field. Place these images in Anki's `collection.media/` folder and reference them in card text as `<img src="filename.png">`.
 
 Default grouping is 4 pages per chunk. Smaller numbers (1-2) give the LLM less context per pass but finer granularity for noise-skipping. Larger numbers (6-10) give more context and can produce more cards per chunk. When the user specified a card count, you may adjust `--pages-per-chunk` to roughly hit the total: e.g. for 50 cards with default 10-20 per chunk, aim for 3-5 chunks → `--pages-per-chunk ceil(total_pages / 4)`.
 

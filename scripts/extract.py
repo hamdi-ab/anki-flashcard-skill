@@ -29,10 +29,30 @@ def _detect_no_text(doc) -> bool:
     return avg < 50
 
 
+def _extract_images_for_pages(
+    doc, pages: list[int], output_dir: Path, chunk_id: str
+) -> list[str]:
+    filenames: list[str] = []
+    for page_num in pages:
+        page = doc.load_page(page_num - 1)
+        img_list = page.get_images(full=True)
+        for n, img in enumerate(img_list):
+            xref = img[0]
+            base = doc.extract_image(xref)
+            ext = base["ext"]
+            filename = f"{chunk_id}_p{page_num}_img{n}.{ext}"
+            img_path = output_dir / filename
+            with open(img_path, "wb") as f:
+                f.write(base["image"])
+            filenames.append(filename)
+    return filenames
+
+
 def extract_chunks(
     pdf_path: str,
     chapter: Optional[str] = None,
     pages_per_chunk: int = 4,
+    extract_images: bool = False,
 ) -> list[dict]:
     try:
         doc = pymupdf.open(pdf_path)
@@ -55,6 +75,7 @@ def extract_chunks(
     chapter_started = chapter is None
     current_pages: list[int] = []
     current_texts: list[str] = []
+    output_dir = Path(pdf_path).parent
 
     for i in range(doc.page_count):
         page = doc.load_page(i)
@@ -73,20 +94,29 @@ def extract_chunks(
         current_texts.append(text)
 
         if len(current_pages) >= pages_per_chunk:
-            chunks.append({
+            chunk = {
                 "breadcrumb": "",
                 "text": "\n\n".join(current_texts),
                 "pages": list(current_pages),
-            })
+            }
+            chunks.append(chunk)
             current_pages.clear()
             current_texts.clear()
 
     if current_pages:
-        chunks.append({
+        chunk = {
             "breadcrumb": "",
             "text": "\n\n".join(current_texts),
             "pages": list(current_pages),
-        })
+        }
+        chunks.append(chunk)
+
+    if extract_images:
+        for n, chunk in enumerate(chunks):
+            chunk_id = f"chunk_{n:04d}"
+            images = _extract_images_for_pages(doc, chunk["pages"], output_dir, chunk_id)
+            if images:
+                chunk["images"] = images
 
     doc.close()
 
@@ -130,6 +160,8 @@ def main():
     parser.add_argument("pdf_path")
     parser.add_argument("--chapter", default=None)
     parser.add_argument("--pages-per-chunk", type=int, default=4)
+    parser.add_argument("--extract-images", action="store_true",
+                        help="Extract embedded images (figures, diagrams) per page")
     args = parser.parse_args()
 
     if args.pages_per_chunk < 1:
@@ -137,7 +169,7 @@ def main():
         sys.exit(1)
 
     chunks = extract_chunks(
-        args.pdf_path, args.chapter, args.pages_per_chunk
+        args.pdf_path, args.chapter, args.pages_per_chunk, args.extract_images
     )
     out_dir = Path(args.pdf_path).parent
 
@@ -146,10 +178,15 @@ def main():
         with open(chunk_path, "w", encoding="utf-8") as f:
             json.dump(chunk, f, ensure_ascii=False)
         p = chunk["pages"]
-        print(f"Wrote {chunk_path} — pages: {p[0]}-{p[-1]} ({len(p)} pp)")
+        imgs = chunk.get("images", [])
+        img_info = f", {len(imgs)} images" if imgs else ""
+        print(f"Wrote {chunk_path} — pages: {p[0]}-{p[-1]} ({len(p)} pp{img_info})")
 
     print(f"Total chunks: {len(chunks)}")
     print(f"Pages per chunk: {args.pages_per_chunk}")
+    if args.extract_images:
+        total_images = sum(len(c.get("images", [])) for c in chunks)
+        print(f"Total images extracted: {total_images}")
 
 
 if __name__ == "__main__":

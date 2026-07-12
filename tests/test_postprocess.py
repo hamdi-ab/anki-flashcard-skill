@@ -80,6 +80,14 @@ def test_cloze_empty():
     assert validate_cloze("") == "missing_cloze_syntax"
 
 
+def test_cloze_empty_content():
+    assert validate_cloze("{{c1::}}") == "missing_cloze_syntax"
+
+
+def test_cloze_special_chars():
+    assert validate_cloze("sign of {{c1::α β}} is key") is None
+
+
 # -- validate_basic --
 
 def test_basic_valid():
@@ -96,6 +104,14 @@ def test_basic_boundary():
     assert validate_basic(q) is None
 
 
+def test_basic_empty():
+    assert validate_basic("") is None
+
+
+def test_basic_whitespace():
+    assert validate_basic("   ") is None
+
+
 # -- word_count --
 
 def test_word_count_normal():
@@ -108,6 +124,14 @@ def test_word_count_empty():
 
 def test_word_count_whitespace():
     assert word_count("  ") == 0
+
+
+def test_word_count_unicode():
+    assert word_count("α β γ δ") == 4
+
+
+def test_word_count_leading_trailing():
+    assert word_count("  one two three  ") == 3
 
 
 # -- process_rows --
@@ -141,6 +165,15 @@ def test_process_dedup():
     ]
     cloze, basic, errors = process_rows(rows, Path("."))
     assert len(cloze) == 1  # second should be deduped
+
+
+def test_process_dedup_case_insensitive():
+    rows = [
+        {"Statements": "{{c1::Enhancement}} key"},
+        {"Statements": "{{c1::enhancement}} key"},
+    ]
+    cloze, basic, errors = process_rows(rows, Path("."))
+    assert len(cloze) == 1
 
 
 def test_process_catches_missing_cloze():
@@ -195,3 +228,33 @@ def test_write_csv_output(tmp_path):
     content = (tmp_path / "cloze_cards.csv").read_text(encoding="utf-8")
     assert "#separator:Tab" in content
     assert "enhancement" in content
+
+
+def test_write_csv_special_chars(tmp_path):
+    rows = [
+        {"Statements": "{{c1::tab\there}} is key"},
+        {"Front": "line1\nline2", "Back": "answer"},
+    ]
+    cloze, basic, errors = process_rows(rows, tmp_path)
+    from scripts.postprocess import write_csv
+    write_csv(basic, tmp_path / "basic_cards.csv", ["Notetype", "Front", "Back", "Tags"])
+    content = (tmp_path / "basic_cards.csv").read_text(encoding="utf-8")
+    assert "Notetype" in content
+    assert "Basic" in content
+
+
+def test_write_csv_content_verified(tmp_path):
+    rows = [
+        {"Statements": "{{c1::enhancement}} sign"},
+        {"Front": "What is key?", "Back": "Enhancement"},
+    ]
+    cloze, basic, errors = process_rows(rows, tmp_path)
+    from scripts.postprocess import write_csv
+    write_csv(cloze, tmp_path / "cloze_cards.csv", ["Notetype", "Text", "Tags"])
+    lines = (tmp_path / "cloze_cards.csv").read_text(encoding="utf-8-sig").splitlines()
+    assert lines[0] == "#separator:Tab"
+    assert lines[1] == "#html:true"
+    assert lines[2] == "#notetype column:1"
+    assert lines[3] == "#tags column:3"
+    assert "Cloze" in lines[5]
+    assert "enhancement" in lines[5]

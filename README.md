@@ -20,9 +20,11 @@ For manual install: clone the repo, then symlink or copy the directory into your
 ```
 /anki textbook.pdf
 /anki textbook.pdf "Acute Pancreatitis"
+/anki textbook.pdf "Acute Pancreatitis" --extract-images
 ```
 
 The optional chapter name searches page text — works with or without a table of contents.
+Use `--extract-images` to save embedded figures and diagrams alongside the chunk files.
 
 ## Output
 
