@@ -5,11 +5,13 @@ A firstmate skill that dissects textbook PDFs into Anki-ready flashcards. Suppor
 ## Install
 
 ```sh
-git clone https://github.com/hamdi-ab/anki-flashcard-skill.git
+npx skills add hamdi-ab/anki-flashcard-skill
 pip install pymupdf
 ```
 
-Symlink or copy the `anki-flashcard-skill` directory into your agent's skill directory (e.g. `~/.agents/skills/` or `~/.claude/skills/`), then invoke via `/anki`.
+This clones the repo and registers it with all supported agents (Claude Code, Codex, GitHub Copilot, Gemini CLI, and others). Using a private repo works if `git` already has credentials.
+
+For manual install: clone the repo, then symlink or copy the directory into your agent's skill directory (e.g. `~/.agents/skills/`).
 
 ## Usage
 
