@@ -1,5 +1,6 @@
 import sys, json, re
 from pathlib import Path
+from typing import Optional
 
 try:
     import pymupdf
@@ -30,7 +31,7 @@ def _detect_no_text(doc) -> bool:
 
 def extract_chunks(
     pdf_path: str,
-    chapter: str | None = None,
+    chapter: Optional[str] = None,
     pages_per_chunk: int = 4,
 ) -> list[dict]:
     try:

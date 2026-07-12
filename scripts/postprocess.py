@@ -3,6 +3,7 @@ import csv
 import re
 import json
 from pathlib import Path
+from typing import Optional
 
 
 CLOZE_RE = re.compile(r"\{\{c\d+::.+?\}\}")
@@ -22,7 +23,7 @@ def parse_llm_response(jsonl_path: str) -> list[dict]:
     return rows
 
 
-def validate_cloze(text: str) -> str | None:
+def validate_cloze(text: str) -> Optional[str]:
     if not CLOZE_RE.search(text):
         return "missing_cloze_syntax"
     for m in CLOZE_RE.finditer(text):
@@ -32,7 +33,7 @@ def validate_cloze(text: str) -> str | None:
     return None
 
 
-def validate_basic(front: str) -> str | None:
+def validate_basic(front: str) -> Optional[str]:
     if len(front.split()) > 40:
         return "word_count_exceeded"
     return None
