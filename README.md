@@ -1,5 +1,7 @@
 # Anki Flashcard
 
+[![skills.sh](https://skills.sh/b/hamdi-ab/anki-flashcard-skill)](https://skills.sh/hamdi-ab/anki-flashcard-skill)
+
 A firstmate skill that dissects textbook PDFs into Anki-ready flashcards. Supports both cloze deletion and basic (front/back) card types, with output CSVs that import directly into Anki or AnkiDroid.
 
 ## Install
@@ -43,6 +45,11 @@ anki-flashcard-skill/
 ├── scripts/
 │   ├── extract.py         # Phase A: PDF → page chunks
 │   └── postprocess.py     # Phase B: validate LLM output → CSVs
+├── tests/
+│   ├── test_extract.py    # 16 tests for extraction pipeline
+│   └── test_postprocess.py # 21 tests for validation/CSV output
+├── requirements.txt       # pymupdf + pytest
+├── .github/workflows/     # CI (tests on 3.9, 3.10, 3.11)
 └── anki-flashcard-workspace/   # evals, test inputs, iteration results
     ├── evals/inputs/      # test passages and real PDF extracts
     ├── docs/              # domain glossary, spec, ADRs
