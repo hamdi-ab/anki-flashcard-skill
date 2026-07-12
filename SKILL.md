@@ -34,6 +34,8 @@ Use `--extract-images` to extract embedded images (figures, diagrams) from each 
 
 Default grouping is 4 pages per chunk. Smaller numbers (1-2) give the LLM less context per pass but finer granularity for noise-skipping. Larger numbers (6-10) give more context and can produce more cards per chunk. When the user specified a card count, you may adjust `--pages-per-chunk` to roughly hit the total: e.g. for 50 cards with default 10-20 per chunk, aim for 3-5 chunks → `--pages-per-chunk ceil(total_pages / 4)`.
 
+Use `--detect-columns` for two-column or three-column textbook layouts. The script reads column by column (left-to-right) instead of row-by-row, producing coherent text per column rather than interleaved fragments.
+
 Read the chunks quickly. If a chunk contains mostly sidebar noise (a repeated outline, advertisement, blank page), skip it in step 3.
 
 _Completion criterion_: Chunk files exist.

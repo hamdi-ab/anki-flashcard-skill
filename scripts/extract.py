@@ -29,6 +29,48 @@ def _detect_no_text(doc) -> bool:
     return avg < 50
 
 
+COLUMN_GAP = 60  # minimum gap (points) between columns
+
+
+def _arrange_by_columns(page) -> str:
+    text_dict = page.get_text("dict")
+    spans: list[tuple[float, float, str]] = []
+    for block in text_dict.get("blocks", []):
+        if block.get("type") != 0:
+            continue
+        for line in block.get("lines", []):
+            for span in line.get("spans", []):
+                txt = span.get("text", "").strip()
+                if txt:
+                    bbox = span["bbox"]
+                    spans.append((bbox[0], bbox[1], txt))
+
+    if not spans:
+        return ""
+
+    x0s = sorted(set(s[0] for s in spans))
+    if len(x0s) < 2:
+        spans.sort(key=lambda s: (s[1], s[0]))
+        return "\n".join(s[2] for s in spans)
+
+    gaps = [x0s[i + 1] - x0s[i] for i in range(len(x0s) - 1)]
+    if max(gaps) < COLUMN_GAP:
+        spans.sort(key=lambda s: (s[1], s[0]))
+        return "\n".join(s[2] for s in spans)
+
+    split = (x0s[0] + x0s[-1]) / 2
+    cols: list[list] = [[], []]
+    for s in spans:
+        cols[0 if s[0] < split else 1].append(s)
+    for col in cols:
+        col.sort(key=lambda s: (s[1], s[0]))
+
+    return "\n\n".join(
+        "\n".join(s[2] for s in col)
+        for col in cols if col
+    )
+
+
 def _extract_images_for_pages(
     doc, pages: list[int], output_dir: Path, chunk_id: str
 ) -> list[str]:
@@ -53,6 +95,7 @@ def extract_chunks(
     chapter: Optional[str] = None,
     pages_per_chunk: int = 4,
     extract_images: bool = False,
+    detect_columns: bool = False,
 ) -> list[dict]:
     try:
         doc = pymupdf.open(pdf_path)
@@ -79,7 +122,10 @@ def extract_chunks(
 
     for i in range(doc.page_count):
         page = doc.load_page(i)
-        raw = page.get_text()
+        if detect_columns:
+            raw = _arrange_by_columns(page)
+        else:
+            raw = page.get_text()
         text = _clean(raw).strip()
         if not text:
             continue
@@ -162,6 +208,8 @@ def main():
     parser.add_argument("--pages-per-chunk", type=int, default=4)
     parser.add_argument("--extract-images", action="store_true",
                         help="Extract embedded images (figures, diagrams) per page")
+    parser.add_argument("--detect-columns", action="store_true",
+                        help="Detect multi-column layout and read column by column")
     args = parser.parse_args()
 
     if args.pages_per_chunk < 1:
@@ -169,7 +217,8 @@ def main():
         sys.exit(1)
 
     chunks = extract_chunks(
-        args.pdf_path, args.chapter, args.pages_per_chunk, args.extract_images
+        args.pdf_path, args.chapter, args.pages_per_chunk, args.extract_images,
+        args.detect_columns,
     )
     out_dir = Path(args.pdf_path).parent
 

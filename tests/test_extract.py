@@ -5,7 +5,7 @@ import pytest
 
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
-from scripts.extract import _clean, _detect_no_text, _extract_images_for_pages, extract_chunks
+from scripts.extract import _clean, _detect_no_text, _extract_images_for_pages, _arrange_by_columns, COLUMN_GAP, extract_chunks
 
 
 def _make_pdf(pages: list[str]) -> str:
@@ -346,6 +346,129 @@ def test_extract_images_with_main_flag():
             cf.unlink()
         for img_name in data["images"]:
             (Path(pdf).parent / img_name).unlink()
+    finally:
+        os.unlink(pdf)
+
+
+# -- column detection --
+
+def _make_two_column_pdf(left_texts: list[str], right_texts: list[str]) -> str:
+    import pymupdf
+    doc = pymupdf.open()
+    page = doc.new_page()
+    y = 40
+    for l, r in zip(left_texts, right_texts):
+        page.insert_text((50, y), l, fontsize=12)
+        page.insert_text((320, y), r, fontsize=12)
+        y += 20
+    doc.save(path := os.path.join(tempfile.gettempdir(), f"test_{os.urandom(4).hex()}.pdf"))
+    doc.close()
+    return path
+
+
+def test_arrange_columns_default_no_flag():
+    left = ["L1: Diagnosis", "L2: Acute", "L3: Chronic"]
+    right = ["R1: Imaging", "R2: CT scan", "R3: MRI"]
+    pdf = _make_two_column_pdf(left, right)
+    try:
+        chunks = extract_chunks(pdf, pages_per_chunk=1)
+        assert len(chunks) == 1
+        text = chunks[0]["text"]
+        assert "L1" in text
+        assert "R1" in text
+    finally:
+        os.unlink(pdf)
+
+
+def test_arrange_columns_column_order():
+    left = ["L: Diagnosis", "L: Acute", "L: Chronic"]
+    right = ["R: Imaging", "R: CT scan", "R: MRI"]
+    pdf = _make_two_column_pdf(left, right)
+    try:
+        chunks = extract_chunks(pdf, pages_per_chunk=1, detect_columns=True)
+        assert len(chunks) == 1
+        text = chunks[0]["text"]
+        left_idx = text.find("L: Diagnosis")
+        right_idx = text.find("R: Imaging")
+        # Left column should appear before right column
+        assert left_idx < right_idx
+        # All left items should come before right items
+        assert text.find("L: Acute") < right_idx
+        assert text.find("L: Chronic") < right_idx
+    finally:
+        os.unlink(pdf)
+
+
+def test_arrange_columns_no_column_gap():
+    import pymupdf
+    doc = pymupdf.open()
+    page = doc.new_page()
+    page.insert_text((50, 40), "Single column text line A", fontsize=12)
+    page.insert_text((50, 60), "Single column line B", fontsize=12)
+    pdf = os.path.join(tempfile.gettempdir(), f"test_{os.urandom(4).hex()}.pdf")
+    doc.save(pdf)
+    doc.close()
+    try:
+        chunks = extract_chunks(pdf, pages_per_chunk=1, detect_columns=True)
+        assert len(chunks) == 1
+        text = chunks[0]["text"]
+        assert "Single column" in text
+        # No column splitting should occur (same x position)
+        assert "\n\n" not in text.strip()
+    finally:
+        os.unlink(pdf)
+
+
+def test_arrange_columns_three_columns():
+    lines = [
+        ("C1: Alpha", "C2: Beta", "C3: Gamma"),
+        ("C1: Delta", "C2: Epsilon", "C3: Zeta"),
+    ]
+    import pymupdf
+    doc = pymupdf.open()
+    page = doc.new_page()
+    y = 40
+    for c1, c2, c3 in lines:
+        page.insert_text((50, y), c1, fontsize=12)
+        page.insert_text((250, y), c2, fontsize=12)
+        page.insert_text((450, y), c3, fontsize=12)
+        y += 20
+    pdf = os.path.join(tempfile.gettempdir(), f"test_{os.urandom(4).hex()}.pdf")
+    doc.save(pdf)
+    doc.close()
+    try:
+        chunks = extract_chunks(pdf, pages_per_chunk=1, detect_columns=True)
+        assert len(chunks) == 1
+        text = chunks[0]["text"]
+        # All column 1 items before column 2, all column 2 before column 3
+        idx1 = text.find("C1:")
+        idx2 = text.find("C2:")
+        idx3_start = text.find("C3: Gamma")
+        idx3_end = text.rfind("C3:")
+        assert idx1 < idx2 < idx3_start
+        assert idx1 > -1 and idx2 > -1 and idx3_start > -1
+    finally:
+        os.unlink(pdf)
+
+
+def test_arrange_columns_with_main_flag():
+    left = ["L: Diagnosis", "L: Acute"]
+    right = ["R: Imaging", "R: CT scan"]
+    pdf = _make_two_column_pdf(left, right)
+    try:
+        sys.argv = ["extract.py", pdf, "--detect-columns"]
+        from scripts.extract import main
+        main()
+        chunks = sorted(Path(pdf).parent.glob("chunk_*.json"))
+        assert len(chunks) == 1
+        data = json.loads(chunks[0].read_text(encoding="utf-8"))
+        assert "L:" in data["text"]
+        assert "R:" in data["text"]
+        left_idx = data["text"].find("L: Diagnosis")
+        right_idx = data["text"].find("R: Imaging")
+        assert left_idx < right_idx
+        for cf in chunks:
+            cf.unlink()
     finally:
         os.unlink(pdf)
 
