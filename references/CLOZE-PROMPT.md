@@ -1,7 +1,7 @@
 Review Text:
 {TEXT}
 
-Task: Your task is to convert this text into direct statements using Anki cloze deletion mark-up. Prioritize the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each statement is clearly written, easily understandable, and adheres to the specified formatting and reference criteria.
+Task: Your task is to convert this text into direct statements using Anki cloze deletion mark-up. Generate {TARGET} statements. Prioritize the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each statement is clearly written, easily understandable, and adheres to the specified formatting and reference criteria.
 
 Formatting Criteria:
 - Construct a table with two columns: "Statements" and "Number".

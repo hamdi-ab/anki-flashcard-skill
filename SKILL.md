@@ -22,21 +22,34 @@ _Completion criterion_: PDF exists and dependency is importable. Stop with a cle
 
 ### 2. Slice
 
-Run `scripts/extract.py <pdf-path> [--chapter "<title>"]`. This produces one `.chunk` file per page and cleans hyphenated line breaks common in PDF text extraction.
+Run `scripts/extract.py <pdf-path> [--chapter "<title>"] [--pages-per-chunk <N>]`. This groups consecutive pages into chunk files and cleans hyphenated line breaks common in PDF text extraction.
 
-Read the chunks quickly. If a page contains mostly sidebar noise (a repeated outline, advertisement, blank page), skip it in step 3.
+Default grouping is 4 pages per chunk. Smaller numbers (1-2) give the LLM less context per pass but finer granularity for noise-skipping. Larger numbers (6-10) give more context and can produce more cards per chunk. When the user specified a card count, you may adjust `--pages-per-chunk` to roughly hit the total: e.g. for 50 cards with default 10-20 per chunk, aim for 3-5 chunks → `--pages-per-chunk ceil(total_pages / 4)`.
+
+Read the chunks quickly. If a chunk contains mostly sidebar noise (a repeated outline, advertisement, blank page), skip it in step 3.
 
 _Completion criterion_: Chunk files exist.
 
 ### 3. Examine
 
-For each chunk file, load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md), inject the chunk text into the `{TEXT}` placeholder, and send to the LLM. Collect all responses into a single JSON-lines file.
+**Resolve the card count target.** Decide `TARGET`:
+
+- If the user specified a number of cards (e.g. `/anki book.pdf 50 cards` or `--cards 50`), compute:  
+  `target_per_chunk = ceil(N / num_chunks)`.  
+  Clamp to a reasonable range (min 5, max 40).
+- If the user did not specify a count, use `"10-20"` as the default.
+
+**For each chunk file:**
+1. **Inventory topics.** Read the chunk text and list 3-8 key concepts/findings in it (e.g. for a radiology page about pancreatitis: necrosis, fluid collections, pseudocysts, abscess, calcifications, ductal dilation). This inventory is your coverage checklist.
+2. **Generate cards.** Load the prompt template from [`references/CLOZE-PROMPT.md`](./references/CLOZE-PROMPT.md) or [`references/BASIC-PROMPT.md`](./references/BASIC-PROMPT.md). Replace `{TEXT}` with the chunk text and `{TARGET}` with the resolved target (e.g. `12` or `10-20`). Send to the LLM.
+3. **Check coverage.** Compare the generated cards against your topic inventory. If an entire topic is missing, send a targeted follow-up to the LLM: `"You covered X and Y but missed Z. Generate cards for Z."`
+4. **Reject trivial clozes.** If a cloze hides a generic word (not, is, most, first, common) or a term obvious from surrounding context, reject that card and ask the LLM to replace the target with a discriminating term.
+
+Collect all responses into a single JSON-lines file.
 
 Some chunks contain sidebar noise (a repeated chapter outline, page numbers, headers or footers). The LLM handles this naturally — it will extract real facts and ignore boilerplate. No need to strip it manually.
 
-Beware of **trivial clozes**: the prompt already warns against hiding generic words like "not" or "most", but the LLM sometimes does it anyway. If a response contains a cloze that would be guessable without domain knowledge (a grammatical word, a common adjective, a term repeated in the surrounding text), reject that card and ask the LLM to replace the cloze target with a discriminating term.
-
-_Completion criterion_: Every chunk produced a response. No chunk was skipped. No trivial clozes survived to output.
+_Completion criterion_: Every chunk produced a response. No chunk was skipped. No trivial clozes survived to output. Every topic identified in the inventory has at least one card.
 
 ### 4. Plate
 

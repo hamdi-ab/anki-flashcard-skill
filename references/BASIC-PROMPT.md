@@ -1,7 +1,7 @@
 Review Text:
 {TEXT}
 
-Task: Your task is to convert this text into Basic Note Type (front/back) Anki flashcards. Prioritize information regarding the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each flashcard is clearly written, and adheres to the specified formatting and reference criteria.
+Task: Your task is to convert this text into Basic Note Type (front/back) Anki flashcards. Generate {TARGET} flashcards. Prioritize information regarding the imaging features of diseases, unique imaging findings, and methods of differentiating similar disease entities. Ensure that each flashcard is clearly written, and adheres to the specified formatting and reference criteria.
 
 Formatting Criteria:
 - Construct a table with three columns: "Front", "Back", "Number".
