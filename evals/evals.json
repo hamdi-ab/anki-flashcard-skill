@@ -1,0 +1,17 @@
+{
+  "skill_name": "anki-flashcard",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "/anki acute_pancreatitis.txt",
+      "expected_output": "Cloze CSV with cards about pancreatic necrosis (lack of enhancement), peripancreatic fluid collections, and CT imaging features. Each card under 40 words, 1-2 cloze deletions, standalone sentences.",
+      "files": ["evals/inputs/acute_pancreatitis.txt"]
+    },
+    {
+      "id": 2,
+      "prompt": "/anki liver_masses.txt",
+      "expected_output": "Both cloze and basic CSVs with cards differentiating hemangioma from metastasis on MRI (T2 signal, enhancement patterns, diffusion restriction). Prioritizes differentiating features.",
+      "files": ["evals/inputs/liver_masses.txt"]
+    }
+  ]
+}

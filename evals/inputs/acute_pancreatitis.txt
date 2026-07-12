@@ -1,0 +1,7 @@
+## Acute Pancreatitis: Imaging Findings
+
+Contrast-enhanced CT is the imaging modality of choice for evaluating acute pancreatitis. Necrosis is identified by lack of contrast enhancement after bolus contrast administration. The severity of pancreatitis is graded using the CT Severity Index (CTSI), which combines the Balthazar grade with the extent of pancreatic necrosis.
+
+Acute peripancreatic fluid collections (APFCs) are non-encapsulated aggregations of fluid in the pancreatic bed and retroperitoneum. They occur within the first 4 weeks of onset. After 4 weeks, these may organize into walled-off necrosis (WON) or pseudocysts, which have a well-defined capsule.
+
+Gas within a necrotic collection suggests infected necrosis, which requires intervention. Other complications include pseudoaneurysm formation (most commonly involving the splenic artery) and venous thrombosis (splenic vein most common).

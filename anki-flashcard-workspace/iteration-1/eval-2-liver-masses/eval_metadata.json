@@ -1,0 +1,6 @@
+{
+  "eval_id": 2,
+  "eval_name": "liver-masses-differentiation",
+  "prompt": "Convert this radiology passage into both cloze and basic Anki flashcards. Prioritize differentiating features between hemangioma and metastasis.",
+  "assertions": []
+}

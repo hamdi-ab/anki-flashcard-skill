@@ -14,6 +14,7 @@ Reference Criteria for each "Statement":
 - Keep the text within the cloze deletions limited to one or two key words.
 - Each statement must be able to stand alone. Include the subject of the statement somewhere in the text.
 - Keep ONLY simple, direct, cloze deletion statements in the "Statements" column.
+- The cloze must hide a discriminating term — a specific finding, diagnosis, number, or differentiating feature. Do NOT hide generic grammatical words (not, is, does, has, can) or words obvious from surrounding context (most, first, common). A good test: if the surrounding sentence makes the answer guessable without domain knowledge, the cloze target is too weak.
 
 Example:
 

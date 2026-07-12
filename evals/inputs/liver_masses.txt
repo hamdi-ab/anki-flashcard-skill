@@ -1,0 +1,7 @@
+## Liver Masses: Hemangioma vs Metastasis
+
+Cavernous hemangioma is the most common benign liver tumor. On T2-weighted MRI, it demonstrates characteristic "light bulb" bright signal due to slow-flowing blood. Enhancement pattern on contrast-enhanced CT or MRI is peripheral nodular discontinuous enhancement with progressive centripetal fill-in on delayed phases. Hemangiomas do not demonstrate restricted diffusion.
+
+Hypervascular metastases (e.g., from renal cell carcinoma, neuroendocrine tumors, melanoma) show early arterial phase enhancement but wash out on portal venous and delayed phases. Unlike hemangiomas, metastases demonstrate restricted diffusion on DWI. The target appearance on T2-weighted images (central T2 hyperintensity with peripheral rim) is characteristic of colorectal liver metastases.
+
+Hepatocellular carcinoma typically occurs in cirrhotic livers. It demonstrates arterial phase hyperenhancement with portal venous or delayed phase washout, and often shows a pseudocapsule.

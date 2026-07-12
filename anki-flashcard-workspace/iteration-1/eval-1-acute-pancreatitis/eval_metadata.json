@@ -1,0 +1,37 @@
+{
+  "eval_id": 1,
+  "eval_name": "acute-pancreatitis-cloze",
+  "prompt": "Convert this radiology passage into Anki cloze flashcards. Prioritize imaging features, unique findings, and differentiating similar entities.",
+  "assertions": [
+    {
+      "name": "word_count_under_40",
+      "description": "Each card must be under 40 words",
+      "check": "all(card word count <= 40)"
+    },
+    {
+      "name": "max_2_cloze_per_card",
+      "description": "No more than 2 cloze deletions per card",
+      "check": "max cloze deletions per card <= 2"
+    },
+    {
+      "name": "valid_cloze_syntax",
+      "description": "All cards use valid {{cN::...}} markup",
+      "check": "all cards match regex {{c\\d+::.+?}}"
+    },
+    {
+      "name": "no_trivial_cloze",
+      "description": "Cloze should hide discriminating key words, not grammatical fillers",
+      "check": "no cloze hides single stop words (not, is, the, a)"
+    },
+    {
+      "name": "standalone_subject",
+      "description": "Every card includes its subject and can be understood without context",
+      "check": "each card names the disease or finding it refers to"
+    },
+    {
+      "name": "coverage_key_facts",
+      "description": "Covers modality, necrosis definition, APFC timeline, complications",
+      "check": "covers CT modality, necrosis definition, APFC 4-week rule, infected necrosis, pseudoaneurysm, venous thrombosis"
+    }
+  ]
+}
